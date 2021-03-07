@@ -1,0 +1,96 @@
+#!/usr/bin/python
+
+import cv2
+import numpy as np
+import rospy
+
+from sensor_msgs.msg import Image
+from geometry_msgs.msg import Twist
+from cv_bridge import CvBridge
+
+
+class LineFollower(object):
+
+    def __init__(self):
+
+        self.donkeyPublisher = rospy.Publisher(
+            '/motor/twist', Twist, queue_size=1)
+
+        self.imgSubscriber = rospy.Subscriber(
+            'roskeycar/camera/image_color/BGR/raw',
+            Image,
+            queue_size=1,
+            callback=self.onImageReceived)
+
+        self.imgBinaryPublisher = rospy.Publisher(
+            'roskeycar/camera/line_following/raw', Image, queue_size=1)
+
+        self.bridge = CvBridge()
+
+        # TODO: Find good values for H, S, V
+        #self.colorMin = np.array([75, 130, 60], dtype=np.uint8)
+        #self.colorMax = np.array([130, 255, 255], dtype=np.uint8)
+
+        self.colorMin = np.array([30, 50, 60], dtype=np.uint8)
+        self.colorMax = np.array([100, 255, 255], dtype=np.uint8)
+
+        # input image
+        self.BGR = None
+
+    def onImageReceived(self, msg):
+        """
+        Callback for receiving image messages
+
+        Parameters
+        ----------
+        msg : sensor_msgs.msg.Image.
+            Image message
+        """
+
+        self.BGR = self.bridge.imgmsg_to_cv2(msg)
+        self.processImage()
+
+    def processImage(self):
+        """
+        """
+
+        height, width = self.BGR.shape[:2]
+
+        # get a strip 
+        #strip = self.BGR[height-50:height, :, :]
+        strip = self.BGR
+
+        # convert image to HSV
+        HSV = cv2.cvtColor(strip, cv2.COLOR_BGR2HSV)
+
+        # color threshold
+        imgBinary = cv2.inRange(HSV, self.colorMin, self.colorMax)
+
+        self.imgBinaryPublisher.publish(self.bridge.cv2_to_imgmsg(imgBinary,
+                                                                  'mono8'))
+
+        # DO YOUR MAGIC HERE!
+
+        ############################
+        # message publishing
+        ############################
+        # creates a Twist message with angular and linear velocity
+        twistMsg = Twist()
+        twistMsg.angular.z = 0.0
+        twistMsg.linear.y = 0.0
+
+        # publish message to topic
+        self.donkeyPublisher.publish(twistMsg)
+
+
+def main():
+
+    rospy.init_node('line_following')
+
+    follower = LineFollower()
+
+    rospy.spin()
+
+
+if __name__ == '__main__':
+    main()

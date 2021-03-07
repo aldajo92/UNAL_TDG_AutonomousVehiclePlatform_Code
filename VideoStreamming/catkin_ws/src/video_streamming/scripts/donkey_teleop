@@ -1,0 +1,111 @@
+#!/usr/bin/python
+
+from __future__ import print_function
+
+import rospy
+from geometry_msgs.msg import Twist
+
+import termios
+import tty
+import sys
+import select
+
+
+terminalSettings = None
+
+keyBindings = {
+    'i': (0.02, 0.0),
+    'm': (-0.02, 0.0),
+    'j': (0.0, 0.1),
+    'l': (0.0, -0.1),
+}
+
+message = """
+DonkeyCar Teleop
+----------------
+
+Use the keys below to control
+the car:
+
+    i
+j   k   l
+    m
+
+k : stop the car
+q : quit program
+"""
+
+
+def readKey(timeout=0.1):
+
+    global terminalSettings
+
+    tty.setraw(sys.stdin.fileno())
+    rlist, _, _ = select.select([sys.stdin], [], [], timeout)
+    key = sys.stdin.read(1) if rlist else None
+
+    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, terminalSettings)
+
+    return key
+
+
+def main():
+    global terminalSettings
+    global message
+
+    rospy.init_node('donkey_teleop')
+    print(message)
+
+    terminalSettings = termios.tcgetattr(sys.stdin)
+
+    publisher = rospy.Publisher('/motor/twist',
+                                Twist,
+                                queue_size=1)
+
+    try:
+
+        currentAngular = 0.0
+        currentLinear = 0.0
+
+        while not rospy.is_shutdown():
+
+            key = readKey()
+
+            if key == 'q':
+                raise RuntimeError('quit pressed')
+
+            if key == 'k':
+                currentLinear = 0.0
+                currentAngular = 0.0
+
+            elif key and key in keyBindings.keys():
+                currentLinear += keyBindings[key][0]
+                currentAngular += keyBindings[key][1]
+
+                # sanitize
+                currentAngular = max(-1.0, min(1.0, currentAngular))
+                currentLinear = max(0, min(1.0, currentLinear))
+
+            print('linear : {0:.02f}    angular : {1:.02f} \r'.format(currentLinear, currentAngular), end='')
+
+            twist = Twist()
+            twist.angular.z = currentAngular
+            twist.linear.y = currentLinear
+            publisher.publish(twist)
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        print('shutting down')
+
+        twist = Twist()
+        twist.angular.z = 0.0
+        twist.linear.y = 0.0
+        publisher.publish(twist)
+
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, terminalSettings)
+
+
+if __name__ == '__main__':
+    main()

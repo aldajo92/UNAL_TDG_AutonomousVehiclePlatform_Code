@@ -1,0 +1,116 @@
+#!/usr/bin/python
+
+"""
+camera: Camera publisher node
+
+------------
+Mode of use
+------------
+$ rosrun roskeycar camera _topic:=<image_topic> _camera:=<int> _resolution:=<[height, width]>
+
+_topic: raw image topic path to publish, default 'roskeycar/camera/image_color/BGR/raw'
+_camera: camera index, default 0
+_resollution: output image resolution, default [320, 240]
+
+"""
+
+import threading
+import rospy
+import cv2
+
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
+
+
+class CameraPublisher(object):
+
+    def __init__(self,
+                 topic='camera_processing/camera/image_color/BGR/raw',
+                 camindex=0,
+                 resolution=(480, 640)):
+
+        # creates a ROS publisher for compressed images
+        self.__publisher = rospy.Publisher(topic, Image, queue_size=1)
+
+        self.__capture = cv2.VideoCapture(camindex)
+        if self.__capture is None:
+            rospy.logerr('CameraPublisher: capture device not found')
+            exit(-1)
+        else:
+            rospy.loginfo('CameraPublisher: capture device found')
+
+        self.__capture.set(cv2.CAP_PROP_FRAME_WIDTH, resolution[1])
+        self.__capture.set(cv2.CAP_PROP_FRAME_HEIGHT, resolution[0])
+
+        self.__bridge = CvBridge()
+
+        rospy.loginfo('CameraPublisher: starting capture loop')
+        self.__imgThread = threading.Thread(target=self.__imageLoop)
+        self.__imgThread.start()
+
+        self.__counter = 0
+
+    def __imageLoop(self):
+        """
+        Image acquisition and processing loop.
+
+        This method constantly reads an image from the capture device and
+        compresses it and publishes it in the ROS topic
+        """
+
+        # 10 Hz frame rate
+        self.__rate = rospy.Rate(20)
+
+        while not rospy.is_shutdown():
+
+            try:
+                # reads a new image from the camera
+                self.__imgBGR = self.__capture.read()[1]
+
+                if self.__imgBGR is not None:
+
+                    msg = self.__bridge.cv2_to_imgmsg(self.__imgBGR, "bgr8")
+
+                    # publish the image
+                    self.__publisher.publish(msg)
+
+                else:
+                    rospy.logerr(
+                        'CameraPublisher: error: no image read from camera')
+
+                self.__counter += 1
+                self.__rate.sleep()
+
+            except Exception as e:
+                rospy.logerr(
+                    'CameraPublisher: error reading image frame: {0}'.format(e))
+
+
+###########################################################
+# ENTRY POINT
+###########################################################
+if __name__ == '__main__':
+
+    # init ros node
+    rospy.init_node('camera')
+
+    rospy.loginfo('camera: start')
+
+    # read node parameters
+    topic = rospy.get_param('camera_processing/topic',
+                            'camera_processing/camera/image_color/BGR/raw')
+    camindex = rospy.get_param('camera_processing/camera', 0)
+    resolution = rospy.get_param('camera_processing/resolution', [240, 320])
+
+    rospy.loginfo('topic name: {0}'.format(topic))
+    rospy.loginfo('camera index: {0}'.format(camindex))
+    rospy.loginfo('image resolution: {0}'.format(resolution))
+
+    webCamPub = CameraPublisher(topic, camindex, resolution)
+
+    try:
+        rospy.spin()
+    except KeyboardInterrupt:
+        rospy.loginfo('camera_processing: keyboard interrupt, shutting down')
+
+    cv2.destroyAllWindows()

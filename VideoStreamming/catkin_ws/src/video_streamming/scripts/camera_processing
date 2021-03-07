@@ -1,0 +1,184 @@
+#!/usr/bin/python
+
+import cv2
+import numpy as np
+import rospy
+
+from sensor_msgs.msg import Image
+from geometry_msgs.msg import Twist
+from cv_bridge import CvBridge
+
+
+class CameraProcessor(object):
+
+    def __init__(self):
+
+        self.imgSubscriber = rospy.Subscriber(
+            'camera_processing/camera/image_color/BGR/raw',
+            Image,
+            queue_size=1,
+            callback=self.onImageReceived)
+
+        self.imgBinaryPublisher = rospy.Publisher(
+            'camera_processing/camera/image_binary/raw', Image, queue_size=1)
+
+        self.donkeyPublisher = rospy.Publisher(
+            '/motor/twist', Twist, queue_size=1)
+
+        self.bridge = CvBridge()
+
+        # HSV color threshold for blue markers
+        self.colorMin = np.array([75, 130, 60], dtype=np.uint8)
+        self.colorMax = np.array([130, 255, 255], dtype=np.uint8)
+
+        # structuring element for morphology operations
+        self.morphKernel = np.array([[0, 1, 0],
+                                     [1, 1, 1],
+                                     [0, 1, 0]], dtype=np.uint8)
+
+        # input image
+        self.BGR = None
+
+    def onImageReceived(self, msg):
+        """
+        Callback for receiving image messages
+
+        Parameters
+        ----------
+        msg : sensor_msgs.msg.Image.
+            Image message
+        """
+
+        self.BGR = self.bridge.imgmsg_to_cv2(msg)
+        self.processImage(self.BGR)
+
+    def processImage(self, BGR):
+
+        # reduce the resolution of the image to half to allow for
+        # faster processing
+        BGR = cv2.resize(BGR, (320, 240))
+
+        # convert image to HSV
+        HSV = cv2.cvtColor(BGR, cv2.COLOR_BGR2HSV)
+
+        # color threshold
+        imgBinary = cv2.inRange(HSV, self.colorMin, self.colorMax)
+
+        # 2 iterations of image erosion
+        imgBinary = cv2.erode(imgBinary, self.morphKernel, iterations=2)
+
+        blobs = self.detectBlobs(imgBinary)
+
+        self.moveToBlob(blobs)
+
+        # add mid line
+        height = BGR.shape[0]
+        imgBinary[height / 2: height / 2 + 2, :] = 255
+        self.imgBinaryPublisher.publish(self.bridge.cv2_to_imgmsg(imgBinary,
+                                                                  'mono8'))
+
+    def detectBlobs(self, imgBinary):
+        """
+        Detect blobs in a binary image by extracting contours
+
+        Parameters
+        ----------
+        imgBinary : ndarray.
+            Binary image
+
+        Returns
+        --------
+        blobs : list.
+            A list of blobs where each element is a 3 vector (x, y, S) where
+            x and y is the average position of the blob contour and S is the
+            number of points that form the contour
+        """
+
+        # extract the contours of the binary blobs
+        _, contours, _ = cv2.findContours(
+            imgBinary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+        # return blob list with the position and size of the blob
+        blobs = list()
+
+        # for each contour in the contour list
+        for c in contours:
+
+            # each contour c is stored as a vector of points of dimensions
+            # [N, 1, 2] where N is the number of points that make the contour
+            # with the last dimension of the (x, y) coordinates
+
+            # contour average position
+            avgX = np.sum(c[:, 0, 0]) / c.shape[0]
+            avgY = np.sum(c[:, 0, 1]) / c.shape[0]
+            blobs.append(np.array([avgX, avgY, c.shape[0]]))
+
+        return blobs
+
+    def moveToBlob(self, blobs):
+        """
+        Select a blob from the blobs list and moves towards it
+
+        ----------
+        Parameters
+        ----------
+
+        blobs: list of blob markers. Each element in the list is an
+        array (x, y, S) with the (x,y) position of the marker and
+        the size S of the blob contour
+        """
+
+        # if the blob list is not empty
+        if len(blobs) > 0:
+
+            # search for the biggest blob in the list
+            bigBlob = blobs[0]
+            for b in blobs:
+                # compare the size of the blob
+                if bigBlob[2] < b[2]:
+                    bigBlob = b
+
+            # move the turtlebot only if the bumper signal is not active
+            # if not self.bumper:
+
+            ############################
+            # Velocity control
+            ############################
+
+            # relative X position with respect to image centre
+            relX = bigBlob[0] - 0.5 * self.BGR.shape[1]
+
+            # proportional gain as a function of relative position error
+            r = 1 - np.exp(-0.1 * (relX * relX) / self.BGR.shape[1])
+
+            # print the position of bigBlob and the gain
+            # print('{0}: r: {1}'.format(bigBlob, r))
+
+            ############################
+            # message publishing
+            ############################
+            # creates a Twist message with angular and linear velocity
+            twistMsg = Twist()
+            twistMsg.angular.z = r * (-1.0 if relX > 0 else 1.0)
+
+            # TODO: change for a better control strategy
+            twistMsg.linear.y = 0.0
+
+            print('{0}: angular: {1:.03f} linear: {2:.03f}'.format(bigBlob,
+                twistMsg.angular.z, twistMsg.linear.y))
+
+            # publish message to topic
+            self.donkeyPublisher.publish(twistMsg)
+
+
+def main():
+
+    rospy.init_node('camera_processing')
+
+    processor = CameraProcessor()
+
+    rospy.spin()
+
+
+if __name__ == '__main__':
+    main()

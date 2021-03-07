@@ -1,0 +1,11 @@
+<launch>
+    <node pkg="pwm_pca9685" type="pca9685_node" name="pca9685_node_1">
+        <param name="frequency" value="50"/>
+        <rosparam param="timeout_value">
+            [4900, 4500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        </rosparam>
+    </node>
+    <node pkg="motors" type="motor_controller.py" name="motor_twist_controller_1"/>
+    <node pkg="motors" type="joy_motor" name="joy_motor_1"/>
+    <node pkg="joy" type="joy_node" name="joy_node1"/>
+</launch>
