@@ -12,7 +12,7 @@ services:
       - ros
     restart: always
   
-  ros-video-streamming:
+  video-streamming:
     ports:
       - "8080:8080"
     build:
