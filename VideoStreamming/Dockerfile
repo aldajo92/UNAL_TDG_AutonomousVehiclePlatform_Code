@@ -46,3 +46,7 @@ RUN apt-get update && apt-get install -y \
     gstreamer1.0-pulseaudio
 
 EXPOSE 8080
+
+COPY ./autostart.sh /
+RUN chmod +x /autostart.sh
+ENTRYPOINT /autostart.sh
