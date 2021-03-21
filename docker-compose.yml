@@ -1,0 +1,46 @@
+version: '3.9'
+
+networks:
+  ros:
+    driver: bridge
+
+services:
+  ros-master:
+    image: ros:melodic-ros-core
+    command: stdbuf -o L roscore
+    networks:
+      - ros
+    restart: always
+  
+  ros-video-streamming:
+    ports:
+      - "8080:8080"
+    build:
+      context: ./VideoStreamming
+    devices:
+      - /dev/video0
+    volumes:
+      - ./VideoStreamming/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
+
+  ros-manual-operation:
+    build:
+      context: ./ManualOperation
+    devices:
+      - /dev/input/js0
+      - /dev/i2c-1
+    volumes:
+      - ./ManualOperation/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
