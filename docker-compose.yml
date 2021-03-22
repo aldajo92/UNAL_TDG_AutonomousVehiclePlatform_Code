@@ -44,3 +44,16 @@ services:
     networks:
       - ros
     restart: always
+
+  developing:
+    build:
+      context: ./_developingRos
+    volumes:
+      - ./_developingRos/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always

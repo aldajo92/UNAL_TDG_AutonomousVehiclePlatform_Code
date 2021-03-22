@@ -1,7 +1,0 @@
-#!bin/bash
-
-sudo touch /etc/systemd/system/jupyter.service
-sudo chmod 644  /etc/systemd/system/jupyter.service
-
-sudp cp jupyter.service /etc/systemd/system/
-sudo chmod 644  /etc/systemd/system/jupyter.service
