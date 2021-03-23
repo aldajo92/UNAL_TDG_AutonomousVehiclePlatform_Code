@@ -39,7 +39,7 @@ class VideoRecorderController(object):
                 self.videoWriter = cv2.VideoWriter(
                     filename,
                     cv2.VideoWriter_fourcc('M','J','P','G'), 
-                    22, 
+                    18,
                     (frame_width,frame_height))
                 rospy.loginfo("capturing")
         else:
