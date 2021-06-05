@@ -1,0 +1,89 @@
+version: '3.9'
+
+networks:
+  ros:
+    driver: bridge
+
+services:
+  ros-master:
+    image: ros:melodic-ros-core
+    command: stdbuf -o L roscore
+    networks:
+      - ros
+    restart: always
+  
+  ros_base:
+    build:
+      context: ./_ROSBase
+  
+  joy_driver_container:
+    build:
+      context: ./JoyDriver
+    devices:
+      - /dev/input/js0
+    volumes:
+      - ./JoyDriver/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+      - ros_base
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
+
+  motor_driver_container:
+    build:
+      context: ./MotorDriver
+    devices:
+      - /dev/i2c-1
+    volumes:
+      - ./MotorDriver/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
+
+  robot_application_container:
+    build:
+      context: ./RobotApplication
+    volumes:
+      - ./RobotApplication/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
+
+  sensor_manager_container:
+    build:
+      context: ./SensorManager
+    devices:
+      - /dev/i2c-1
+    volumes:
+      - ./SensorManager/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
+
+  # developing:
+  #   build:
+  #     context: ./_developingRos
+  #   volumes:
+  #     - ./_developingRos/catkin_ws:/catkin_ws
+  #   depends_on:
+  #     - ros-master
+  #   environment:
+  #     - "ROS_MASTER_URI=http://ros-master:11311"
+  #   networks:
+  #     - ros
+  #   restart: always
