@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+PROJECT_ROOT="$(cd "$(dirname "$0")"; cd ..; pwd)"
+
+docker run -it \
+  -p 8080:8080 \
+  -p 11311:11311 \
+  --name=ros-video-streamming \
+  --device=/dev/video0 \
+  --volume ${PROJECT_ROOT}/catkin_ws:/catkin_ws \
+  --rm \
+  ros-video-streamming "$@"
+
+# Share a device with the Docker container by adding:
+#   --device=/dev/ttyUSB0 \
+# below the line containing "--name"

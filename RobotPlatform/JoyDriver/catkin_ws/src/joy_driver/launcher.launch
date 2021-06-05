@@ -1,0 +1,5 @@
+<launch>
+    <!-- <node pkg="joy_driver" type="joy_driver" name="joy_motor_1" output="screen"/> -->
+    <node pkg="joy_driver" type="joy_driver" name="joy_motor_1"/>
+    <node pkg="joy" type="joy_node" name="joy_node1"/>
+</launch>
