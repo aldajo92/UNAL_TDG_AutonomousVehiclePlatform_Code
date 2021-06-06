@@ -1,4 +1,0 @@
-<launch>
-    <node pkg="video_recorder" type="recorder" name="recorder2" output="screen"/>
-    <!-- <node pkg="video_recorder" type="recorder" name="recorder1"/> -->
-</launch>
