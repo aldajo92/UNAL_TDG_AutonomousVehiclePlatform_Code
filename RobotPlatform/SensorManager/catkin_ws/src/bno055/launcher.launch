@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="bno055" type="bno055_ros.py" name="bno055_node"/>
+</launch>
