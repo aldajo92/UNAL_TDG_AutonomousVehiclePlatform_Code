@@ -1,0 +1,17 @@
+total 56
+drwxrwxr-x 11 robot robot 4096 jun  6 18:22 .
+drwxr-xr-x 28 robot robot 4096 may 26 16:32 ..
+-rw-rw-r--  1 robot robot    0 jun  6 16:41 ÷5@@XZ@8
+drwxrwxr-x  3 robot robot 4096 mar  4 16:34 configuration
+drwxrwxr-x  4 robot robot 4096 jun  6 01:53 ContainerArduinoBuilder
+drwxrwxr-x  4 robot robot 4096 jun  5 22:22 ContainerHelloWorld
+drwxrwxr-x  3 robot robot 4096 mar  7 04:00 ContainerJupyter
+-rw-rw-r--  1 robot robot    0 jun  6 18:22 file.txt
+drwxrwxr-x  8 robot robot 4096 jun  6 18:20 .git
+-rw-rw-r--  1 robot robot  823 jun  5 22:22 .gitignore
+-rw-rw-r--  1 robot robot  292 mar 12 16:52 install-deps.sh
+-rw-rw-r--  1 robot robot   63 mar  5 00:19 README.md
+drwxrwxr-x  8 robot robot 4096 jun  5 21:32 RobotPlatform
+drwxrwxr-x  4 robot robot 4096 jun  6 15:21 ROS_Docker_Python3
+drwxrwxrwx  4 robot robot 4096 jun  6 01:57 utils
+drwxrwxr-x  2 robot robot 4096 jun  5 18:57 .vscode

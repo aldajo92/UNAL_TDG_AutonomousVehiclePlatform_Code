@@ -58,5 +58,7 @@ qtcreator-*
 CATKIN_IGNORE
 ./catkin_ws/.catkin_workspace
 *.avi
+�5@@XZ@8
+ROS_Docker_Python3
 
 # End of https://www.toptal.com/developers/gitignore/api/ros
