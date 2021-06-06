@@ -75,15 +75,19 @@ services:
       - ros
     restart: always
 
-  # developing:
-  #   build:
-  #     context: ./_developingRos
-  #   volumes:
-  #     - ./_developingRos/catkin_ws:/catkin_ws
-  #   depends_on:
-  #     - ros-master
-  #   environment:
-  #     - "ROS_MASTER_URI=http://ros-master:11311"
-  #   networks:
-  #     - ros
-  #   restart: always
+  video_streaming_container:
+    ports:
+      - "8080:8080"
+    build:
+      context: ./VideoStreaming
+    devices:
+      - /dev/video0
+    volumes:
+      - ./VideoStreaming/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always

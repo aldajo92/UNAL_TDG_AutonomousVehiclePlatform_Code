@@ -1,4 +1,5 @@
 <launch>
     <!-- <node pkg="manual_operation" type="manual_operation" name="manual_operation_1" output="screen"/> -->
     <node pkg="manual_operation" type="manual_operation.py" name="manual_operation_1"/>
+    <node pkg="manual_operation" type="recorder.py" name="recorder2" />
 </launch>

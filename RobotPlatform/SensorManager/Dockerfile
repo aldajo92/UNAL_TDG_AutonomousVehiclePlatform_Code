@@ -1,7 +1,9 @@
 FROM ros_base
 # install ros tutorials packages
 RUN apt-get update && apt-get install -y \
+    python-pip \
     tmux \
+    && python -m pip install pyserial \
     && echo "source /catkin_ws/devel/setup.bash" >> /root/.bashrc
 
 COPY ./autostart.sh /

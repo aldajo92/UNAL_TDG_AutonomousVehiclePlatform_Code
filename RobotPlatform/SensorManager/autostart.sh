@@ -4,4 +4,5 @@
 source "/opt/ros/$ROS_DISTRO/setup.bash"
 
 cd /catkin_ws/ && catkin_make
-source /catkin_ws/devel/setup.bash && roslaunch imu_bno055 imu.launch
+source /catkin_ws/devel/setup.bash
+roslaunch imu_bno055 imu.launch
