@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+PROJECT_ROOT="$(cd "$(dirname "$0")"; cd ..; pwd)"
+source ${PROJECT_ROOT}/config.sh
+
+echo "cleaning files in catkin_ws.."
+sudo rm -rf ${PROJECT_ROOT}/catkin_ws/build
+sudo rm -rf ${PROJECT_ROOT}/catkin_ws/devel
