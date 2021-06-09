@@ -16,6 +16,21 @@ services:
     build:
       context: ./_ROSBase
   
+  # computer_vision_container:
+  #   build:
+  #     context: ./ComputerVision
+  #   runtime: nvidia
+  #   volumes:
+  #     - ./ComputerVision/catkin_ws:/catkin_ws
+  #     - ./ComputerVision/python3_ws:/python3_ws
+  #   depends_on:
+  #     - ros-master
+  #   environment:
+  #     - "ROS_MASTER_URI=http://ros-master:11311"
+  #   networks:
+  #     - ros
+  #   restart: always
+  
   joy_driver_container:
     build:
       context: ./JoyDriver
@@ -25,7 +40,6 @@ services:
       - ./JoyDriver/catkin_ws:/catkin_ws
     depends_on:
       - ros-master
-      - ros_base
     environment:
       - "ROS_MASTER_URI=http://ros-master:11311"
     networks:

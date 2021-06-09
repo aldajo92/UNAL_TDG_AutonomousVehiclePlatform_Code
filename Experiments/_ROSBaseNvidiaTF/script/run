@@ -8,8 +8,10 @@ source ${PROJECT_ROOT}/config.sh
 docker run -it \
   --name=${PROJECT_NAME} \
   --volume ${PROJECT_ROOT}/catkin_ws:/catkin_ws \
-  --volume ${PROJECT_ROOT}/python3_ws:/python3_ws \
   --rm \
-  --runtime nvidia \
-  --network host \
+  --runtime nvidia
+  --network host
   ${PROJECT_NAME}
+
+
+  # docker run -it --rm --runtime nvidia --network host nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.3-py3
