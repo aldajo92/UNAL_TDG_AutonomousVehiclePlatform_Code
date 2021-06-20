@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+PROJECT_ROOT="$(cd "$(dirname "$0")"; cd ..; pwd)"
+source ${PROJECT_ROOT}/config.sh
+
+echo "cleaning files in catkin_ws.."
+sudo rm -rf ${PROJECT_ROOT}/python3_ws/build
+sudo rm -rf ${PROJECT_ROOT}/python3_ws/devel
+sudo rm -rf ${PROJECT_ROOT}/python3_ws/install
+sudo rm -rf ${PROJECT_ROOT}/python3_ws/logs
+sudo rm -rf ${PROJECT_ROOT}/python3_ws/.catkin_tools
+
+sudo chmod go+w python3_ws/src/vision_opencv
+sudo rm -rf ${PROJECT_ROOT}/python3_ws/src/vision_opencv
