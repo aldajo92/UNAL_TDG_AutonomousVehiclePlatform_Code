@@ -24,3 +24,10 @@ You will then want to restart the Docker service or reboot your system before pr
 docker pull nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.3-py3
 docker run -it --rm --runtime nvidia --network host nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.3-py3
 ```
+
+## I2C ##
+i2cdetect -r -y N where N is the I2C bus number.
+
+## References ##
+
+- I2C detect: https://forum.legato.io/t/i2cdetect-shows-no-devices-on-the-bus/3502
