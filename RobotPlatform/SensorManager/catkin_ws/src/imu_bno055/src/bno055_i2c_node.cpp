@@ -57,6 +57,7 @@ int main(int argc, char *argv[]) {
 
     int param_rate;
     nh_priv->param("rate", param_rate, (int)100);
+    // ROS_INFO("rate = %d", param_rate);
 
     ros::Rate rate(param_rate);
     while(ros::ok()) {

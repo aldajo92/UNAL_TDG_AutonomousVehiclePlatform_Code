@@ -74,20 +74,20 @@ services:
       - ros
     restart: always
 
-  sensor_manager_container:
-    build:
-      context: ./SensorManager
-    devices:
-      - /dev/i2c-1
-    volumes:
-      - ./SensorManager/catkin_ws:/catkin_ws
-    depends_on:
-      - ros-master
-    environment:
-      - "ROS_MASTER_URI=http://ros-master:11311"
-    networks:
-      - ros
-    restart: always
+  # sensor_manager_container:
+  #   build:
+  #     context: ./SensorManager
+  #   devices:
+  #     - /dev/i2c-1
+  #   volumes:
+  #     - ./SensorManager/catkin_ws:/catkin_ws
+  #   depends_on:
+  #     - ros-master
+  #   environment:
+  #     - "ROS_MASTER_URI=http://ros-master:11311"
+  #   networks:
+  #     - ros
+  #   restart: always
 
   video_streaming_container:
     ports:

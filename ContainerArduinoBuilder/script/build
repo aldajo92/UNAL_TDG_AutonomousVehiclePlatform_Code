@@ -3,9 +3,10 @@
 set -e
 
 PROJECT_ROOT="$(cd "$(dirname "$0")"; cd ..; pwd)"
+source ${PROJECT_ROOT}/config.sh
 
 echo "Building Docker image..."
-docker build -t ros-video_streamming ${PROJECT_ROOT}
+docker build -t ${PROJECT_NAME} ${PROJECT_ROOT}
 
 echo "Upload and clean..."
 ${PROJECT_ROOT}/script/run sh -c 'cd arduino && make upload clean'
