@@ -11,7 +11,7 @@ int number = 0;
 boolean state = 0;
 
 const float Pi = 3.141593;
-const float diameter = 12; // [mm]
+const float diameter = 120; // [mm]
 
 const int steps = 16;
 double velocity = 0;

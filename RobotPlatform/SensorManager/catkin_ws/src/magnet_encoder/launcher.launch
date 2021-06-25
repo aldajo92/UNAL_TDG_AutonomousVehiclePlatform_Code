@@ -1,0 +1,3 @@
+<launch>
+    <node name="magnet_encoder_node_1" pkg="magnet_encoder" type="magnet_encoder_node" output="screen"/>
+</launch>
