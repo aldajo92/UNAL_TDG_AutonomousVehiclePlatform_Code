@@ -38,7 +38,7 @@ def publisher():
 
 	load_calibration = rospy.get_param("~load_calibration", False)
 
-	rate = rospy.Rate(30) #30Hz data read
+	rate = rospy.Rate(10) #10Hz data read
 
 	# Setup BNO055
 	# Create and configure the BNO sensor connection.
@@ -130,10 +130,10 @@ def publisher():
 		while attempts < 4:
 			try:
 				# Orientation as a quaternion:
-				orientation.x, orientation.y, orientation.z, orientation.w  = sensor.read_quaternion()
+				# orientation.x, orientation.y, orientation.z, orientation.w  = sensor.read_quaternion()
 
 				# Read the Euler angles for heading, roll, pitch (all in degrees).
-				# orientation_euler.x, orientation_euler.y, orientation_euler.z  = sensor.read_euler()
+				orientation.x, orientation.y, orientation.z  = sensor.read_euler()
 
 				# Gyroscope data (in degrees per second converted to radians per second):
 				gry_x, gry_y, gry_z = sensor.read_gyroscope()

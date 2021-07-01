@@ -16,7 +16,7 @@ const float diameter = 120; // [mm]
 const int steps = 16;
 double velocity = 0;
 
-const float sampleTime = 200; // [ms]
+const float sampleTime = 100; // [ms]
 union Encoder
 {
   int val;

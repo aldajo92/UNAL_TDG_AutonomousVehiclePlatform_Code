@@ -112,10 +112,8 @@ int main(int argc, char **argv)
     //     return -4;
     // }
 
-    // watchdog->start(5000);
-
     int param_freq;
-    nh_priv->param("freq", param_freq, (int)2);
+    nh_priv->param("freq", param_freq, (int)5);
     // ROS_INFO("freq = %d", freq);
 
     ros::Rate rate(param_freq);
@@ -138,7 +136,6 @@ int main(int argc, char **argv)
     }
 
     // activity->stop();
-    // watchdog->stop();
 
     // delete watchdog;
     delete i2c;

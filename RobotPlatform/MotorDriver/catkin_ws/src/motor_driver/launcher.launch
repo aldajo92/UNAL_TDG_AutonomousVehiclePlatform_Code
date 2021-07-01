@@ -2,8 +2,11 @@
     <node pkg="pwm_pca9685" type="pca9685_node" name="pca9685_node_1">
         <remap from="command" to="pca9685/motor_command"/>
         <param name="frequency" value="50"/>
+        <!-- <rosparam param="timeout">
+            [1000, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        </rosparam> -->
         <rosparam param="timeout_value">
-            [4900, 4500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            [4700, 4820, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         </rosparam>
     </node>
     <node pkg="motor_driver" type="motor_driver.py" name="motor_driver_1"/>

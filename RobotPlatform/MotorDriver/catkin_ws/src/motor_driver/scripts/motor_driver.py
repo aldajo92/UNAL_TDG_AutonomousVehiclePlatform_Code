@@ -15,10 +15,10 @@ class MotorController:
         self.msg.layout.dim[0].size = 16
         self.msg.layout.dim[0].stride = 16
 
-        self.vel_zero = 4900
-        self.dir_zero = 4500
+        self.vel_zero = 4700
+        self.dir_zero = 4820
 
-        self.vel_max = 300
+        self.vel_max = 600
         self.dir_max = 2000
 
         # self.msg.data = [4900, 4900, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
@@ -28,7 +28,7 @@ class MotorController:
         if twist.linear.x >= 0:
             x_val = int(self.vel_zero + (twist.linear.x * self.vel_max))
         else:
-            x_val = int(self.vel_zero + (twist.linear.x * self.vel_max) - 200)
+            x_val = int(self.vel_zero + (twist.linear.x * self.vel_max) + 200)
         z_val = int(self.dir_zero + (twist.angular.z * self.dir_max))
         self.msg.data = [x_val, z_val, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 

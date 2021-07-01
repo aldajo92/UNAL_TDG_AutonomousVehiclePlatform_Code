@@ -162,6 +162,7 @@ include_directories(
 catkin_install_python(PROGRAMS
   scripts/manual_operation.py
   scripts/recorder.py
+  scripts/euler.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
