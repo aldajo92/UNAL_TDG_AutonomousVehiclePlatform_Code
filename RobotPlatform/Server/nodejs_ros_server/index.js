@@ -34,7 +34,9 @@ io.on('connection', (socket) => {
 })
 
 const message = {
-  velocityEncoder: 0.0
+  velocityEncoder: 0.0,
+  direction: 0.0,
+  input: 0.0
 }
 
 // ROS-NODEJS
@@ -49,6 +51,8 @@ if (process.env.ROS_DISTRO == "melodic") {
   const nh = rosnodejs.nh
   const sub1 = nh.subscribe('/magnet_encoder/value', 'std_msgs/Float32', (msg) => {
     message.velocityEncoder = msg.data
+    message.direction = twistMessage.angular.z
+    message.input = twistMessage.linear.x
     io.sockets.emit('robot-message', message)
   })
 
