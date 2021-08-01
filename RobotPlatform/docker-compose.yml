@@ -31,20 +31,20 @@ services:
   #     - ros
   #   restart: always
   
-  joy_driver_container:
-    build:
-      context: ./JoyDriver
-    devices:
-      - /dev/input/js0
-    volumes:
-      - ./JoyDriver/catkin_ws:/catkin_ws
-    depends_on:
-      - ros-master
-    environment:
-      - "ROS_MASTER_URI=http://ros-master:11311"
-    networks:
-      - ros
-    restart: always
+  # joy_driver_container:
+  #   build:
+  #     context: ./JoyDriver
+  #   devices:
+  #     - /dev/input/js0
+  #   volumes:
+  #     - ./JoyDriver/catkin_ws:/catkin_ws
+  #   depends_on:
+  #     - ros-master
+  #   environment:
+  #     - "ROS_MASTER_URI=http://ros-master:11311"
+  #   networks:
+  #     - ros
+  #   restart: always
 
   motor_driver_container:
     build:
@@ -74,20 +74,35 @@ services:
       - ros
     restart: always
 
-  # sensor_manager_container:
-  #   build:
-  #     context: ./SensorManager
-  #   devices:
-  #     - /dev/i2c-1
-  #   volumes:
-  #     - ./SensorManager/catkin_ws:/catkin_ws
-  #   depends_on:
-  #     - ros-master
-  #   environment:
-  #     - "ROS_MASTER_URI=http://ros-master:11311"
-  #   networks:
-  #     - ros
-  #   restart: always
+  sensor_manager_container:
+    build:
+      context: ./SensorManager
+    devices:
+      - /dev/i2c-1
+    volumes:
+      - ./SensorManager/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
+
+  server_container:
+    ports:
+      - "5170:5170"
+    build:
+      context: ./Server
+    volumes:
+      - ./Server/nodejs_ros_server:/nodejs_ros_server
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
 
   video_streaming_container:
     ports:
@@ -105,3 +120,13 @@ services:
     networks:
       - ros
     restart: always
+
+  ngrok_container:
+    build:
+      context: ./_ngrok
+    env_file: ~/variables.env
+    networks:
+      - ros
+    restart: always
+
+    # docker run --rm -p 4040:4040 -p 5000:5000 -e NGROK_PORT="host.docker.internal:5000" -e NGROK_SUBDOMAIN=aldajo92 wernight/ngrok
