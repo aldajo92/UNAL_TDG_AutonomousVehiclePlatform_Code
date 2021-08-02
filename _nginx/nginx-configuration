@@ -5,3 +5,5 @@ sudo cp jupyter.conf /etc/nginx/sites-available/jupyter.conf
 sudo ln -s /etc/nginx/sites-available/jupyter.conf /etc/nginx/sites-enabled/jupyter.conf
 sudo nginx -t
 
+sudo rm -rf /etc/nginx/sites-enabled/default
+sudo service nginx restart
