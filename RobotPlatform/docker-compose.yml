@@ -6,31 +6,32 @@ networks:
 
 services:
   ros-master:
-    image: ros:melodic-ros-core
+    build:
+      context: ./_ROSBase
+    runtime: nvidia
+    volumes:
+      - ./_ROSBase/python3_ws:/python3_ws
     command: stdbuf -o L roscore
     networks:
       - ros
     restart: always
   
-  ros_base:
+  computer_vision_container:
     build:
-      context: ./_ROSBase
+      context: ./ComputerVision
+    runtime: nvidia
+    volumes:
+      - ./_ROSBase/python3_ws:/python3_ws
+      - ./ComputerVision/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
   
-  # computer_vision_container:
-  #   build:
-  #     context: ./ComputerVision
-  #   runtime: nvidia
-  #   volumes:
-  #     - ./ComputerVision/catkin_ws:/catkin_ws
-  #     - ./ComputerVision/python3_ws:/python3_ws
-  #   depends_on:
-  #     - ros-master
-  #   environment:
-  #     - "ROS_MASTER_URI=http://ros-master:11311"
-  #   networks:
-  #     - ros
-  #   restart: always
-  
+  ## Just use it to manage car with joystick connected via USB
   # joy_driver_container:
   #   build:
   #     context: ./JoyDriver

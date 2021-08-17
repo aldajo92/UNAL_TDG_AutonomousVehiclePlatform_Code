@@ -58,7 +58,7 @@ class CameraPublisher(object):
         compresses it and publishes it in the ROS topic
         """
 
-        # 10 Hz frame rate
+        # 20 Hz frame rate
         self.__rate = rospy.Rate(20)
 
         while not rospy.is_shutdown():

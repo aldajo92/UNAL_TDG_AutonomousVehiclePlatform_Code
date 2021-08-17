@@ -1,4 +1,5 @@
-FROM ros_base
+FROM ros:melodic-ros-base
+
 # install ros tutorials packages
 RUN apt-get update && apt-get install -y \
     python-pip \

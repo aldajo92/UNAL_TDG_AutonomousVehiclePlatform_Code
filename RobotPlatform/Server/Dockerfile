@@ -1,4 +1,4 @@
-FROM ros_base
+FROM ros:melodic-ros-base
 
 RUN apt-get update && apt-get install -y \
     tmux wget curl
