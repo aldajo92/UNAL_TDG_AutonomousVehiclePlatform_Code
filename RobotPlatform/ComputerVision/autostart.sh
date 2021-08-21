@@ -30,4 +30,4 @@ cd /catkin_ws/ && catkin_make
 
 # source /catkin_ws/devel/setup.bash
 # source /python3_ws/devel/setup.bash
-roslaunch ros_hello_world launcher.launch
+roslaunch image_processing launcher.launch
