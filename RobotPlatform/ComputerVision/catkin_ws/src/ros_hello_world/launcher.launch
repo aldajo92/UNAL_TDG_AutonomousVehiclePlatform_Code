@@ -1,5 +1,5 @@
 <launch>
     <node pkg="ros_hello_world" type="listener.py" name="listener_1"/>
     <node pkg="ros_hello_world" type="talker.py" name="talker_1" />
-    <node pkg="ros_hello_world" type="hello.py" name="hello_1" output="screen"/>
+    <node pkg="ros_hello_world" type="cv_pipeline.py" name="cv_pipeline_1" />
 </launch>

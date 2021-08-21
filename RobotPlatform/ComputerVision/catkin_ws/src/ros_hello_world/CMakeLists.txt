@@ -162,7 +162,8 @@ include_directories(
 catkin_install_python(PROGRAMS
   scripts/listener.py
   scripts/talker.py
-  scripts/hello.py
+  scripts/cv_pipeline.py
+  scripts/lane_detection_pipeline.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
