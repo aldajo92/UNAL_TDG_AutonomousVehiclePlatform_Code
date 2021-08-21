@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="bno055" type="bno055_ros.py" name="bno055_node"/>
+    <node name="magnet_encoder_node_1" pkg="magnet_encoder" type="magnet_encoder_node"/>
+</launch>

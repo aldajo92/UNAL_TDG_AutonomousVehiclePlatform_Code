@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+PROJECT_ROOT="$(cd "$(dirname "$0")"; cd ..; pwd)"
+source ${PROJECT_ROOT}/config.sh
+
+docker run -it \
+  --name=${PROJECT_NAME} \
+  --device=/dev/ttyUSB0 \
+  --volume ${PROJECT_ROOT}/src:/arduino \
+  --rm \
+  ${PROJECT_NAME} "$@"
+
+# Share a device with the Docker container by adding:
+#   --device=/dev/ttyUSB0 \
+# below the line containing "--name"

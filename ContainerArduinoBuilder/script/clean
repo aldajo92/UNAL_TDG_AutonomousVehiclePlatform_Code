@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+
+PROJECT_ROOT="$(cd "$(dirname "$0")"; cd ..; pwd)"
+
+echo "cleaning files in arduinoSrc.."
+sudo rm -rf ${PROJECT_ROOT}/build-*
