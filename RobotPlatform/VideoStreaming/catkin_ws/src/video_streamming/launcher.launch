@@ -1,5 +1,5 @@
 <launch>
     <node pkg="web_video_server" type="web_video_server" name="web_video_server_1"/>
     <node pkg="video_streamming" type="camera" name="camera_1"/>
-    <node pkg="video_streamming" type="camera_processing" name="camera_processinwg_1"/>
+    <!-- <node pkg="video_streamming" type="camera_processing" name="camera_processinwg_1"/> -->
 </launch>

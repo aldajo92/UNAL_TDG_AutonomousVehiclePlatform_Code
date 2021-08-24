@@ -14,13 +14,13 @@ class CameraProcessor(object):
     def __init__(self):
 
         self.imgSubscriber = rospy.Subscriber(
-            'camera_processing/camera/image_color/BGR/raw',
+            'camera/BGR/raw',
             Image,
             queue_size=1,
             callback=self.onImageReceived)
 
         self.imgBinaryPublisher = rospy.Publisher(
-            'camera_processing/camera/image_binary/raw', Image, queue_size=1)
+            'image_processing/binary/raw', Image, queue_size=1)
 
         self.donkeyPublisher = rospy.Publisher(
             '/motor/twist', Twist, queue_size=1)

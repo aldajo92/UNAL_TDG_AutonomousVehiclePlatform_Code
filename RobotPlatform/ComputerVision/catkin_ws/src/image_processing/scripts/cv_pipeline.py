@@ -40,14 +40,14 @@ class CameraProcessing(object):
 
     def __init__(self):
         self.imgSubscriber = rospy.Subscriber(
-            'camera_processing/camera/image_color/BGR/raw',
+            'camera/BGR/raw',
             Image,
             queue_size=1,
             callback=self.onImageReceived
         )
 
         self.imgBinaryPublisher = rospy.Publisher(
-            'camera_processing/camera/image_result/raw',
+            'computer_vision/line_processing',
             Image,
             queue_size=1
         )
