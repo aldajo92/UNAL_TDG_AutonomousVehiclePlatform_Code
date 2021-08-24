@@ -82,51 +82,6 @@ class LaneDetection:
         warped = cv2.warpPerspective(img, M, img_size)
         # return warped, M, self._M_inv
         return warped, M
-    
-    # def _detect_lines(self, binary_warped):
-    #     # Check if lines were last detected; if not, re-run first_lines
-    #     if self.left_line.detected == False or self.right_line.detected == False:
-    #         _ = self._first_lines(binary_warped)
-
-    #     # Set the fit as the current fit for now
-    #     left_fit = self.left_line.current_fit
-    #     right_fit = self.right_line.current_fit
-
-    #     # Grab activated pixels
-    #     nonzero = binary_warped.nonzero()
-    #     nonzeroy = np.array(nonzero[0])
-    #     nonzerox = np.array(nonzero[1])
-
-    #     margin = 100
-    #     l_lane_inds = ((nonzerox > (left_fit[0]*(nonzeroy**2) + left_fit[1]*nonzeroy + left_fit[2] - margin))
-    #                    & (nonzerox < (left_fit[0]*(nonzeroy**2) + left_fit[1]*nonzeroy + left_fit[2] + margin)))
-    #     r_lane_inds = ((nonzerox > (right_fit[0]*(nonzeroy**2) + right_fit[1]*nonzeroy + right_fit[2] - margin))
-    #                    & (nonzerox < (right_fit[0]*(nonzeroy**2) + right_fit[1]*nonzeroy + right_fit[2] + margin)))
-
-    #     # Extract left and right line pixel positions
-    #     leftx = nonzerox[l_lane_inds]
-    #     lefty = nonzeroy[l_lane_inds]
-    #     rightx = nonzerox[r_lane_inds]
-    #     righty = nonzeroy[r_lane_inds]
-
-    #     # Fit new polynomials
-    #     left_fit = self.left_line.fit_line(leftx, lefty, False)
-    #     right_fit = self.right_line.fit_line(rightx, righty, False)
-
-    #     # Generate x and y values for plotting
-    #     fity = np.linspace(0, binary_warped.shape[0]-1, binary_warped.shape[0])
-    #     fit_leftx = left_fit[0]*fity**2 + left_fit[1]*fity + left_fit[2]
-    #     fit_rightx = right_fit[0]*fity**2 + right_fit[1]*fity + right_fit[2]
-
-    #     # Create an image to draw on and an image to show the selection window
-    #     out_img = np.dstack((binary_warped, binary_warped, binary_warped))*255
-    #     window_img = np.zeros_like(out_img)
-
-    #     # Color in left and right line pixels
-    #     out_img[nonzeroy[l_lane_inds], nonzerox[l_lane_inds]] = [255, 0, 0]
-    #     out_img[nonzeroy[r_lane_inds], nonzerox[r_lane_inds]] = [0, 0, 255]
-
-    #     return out_img, left_fit, right_fit, fity, fit_leftx, fit_rightx
 
     def _segmentation_lane_detection(self, binary_bird_view, img_lane):
         (height, width) = img_lane.shape[:2]

@@ -3,20 +3,13 @@
 import rospy
 
 from sensor_msgs.msg import Image
+from geometry_msgs.msg import Point
 from cv_bridge import CvBridge
 import cv2
 
 import lane_detection_pipeline as pipeline
+import braitenberg_navigation as navigation
 
-def talker():
-    pub = rospy.Publisher('hello', String, queue_size=10)
-    rospy.init_node('talker', anonymous=True)
-    rate = rospy.Rate(10) # 10hz
-    while not rospy.is_shutdown():
-        hello_str = "hello world %s" % rospy.get_time()
-        rospy.loginfo(hello_str)
-        pub.publish(hello_str)
-        rate.sleep()
 
 def getCorners(height, width):
     mid_offset = 20
@@ -36,6 +29,27 @@ def getCorners(height, width):
 
     return corners
 
+def getLeftRightCorners(height, width):
+    rectange_w = 10
+    rectange_h = 40
+
+    margin_horizontal = 100
+    margin_top = 70
+
+    corners_region_l = [
+        (margin_horizontal, margin_top),
+        (margin_horizontal, rectange_h+margin_top),
+        (margin_horizontal+rectange_w, rectange_h+margin_top),
+        (margin_horizontal+rectange_w, margin_top)
+    ]
+    corners_region_r = [
+        (width-margin_horizontal-rectange_w, margin_top), 
+        (width-margin_horizontal-rectange_w, rectange_h+margin_top),
+        (width-margin_horizontal, rectange_h+margin_top),
+        (width-margin_horizontal, margin_top)
+    ]
+    return corners_region_l, corners_region_r
+
 class CameraProcessing(object):
 
     def __init__(self):
@@ -52,9 +66,20 @@ class CameraProcessing(object):
             queue_size=1
         )
 
+        self.navPublisher = rospy.Publisher(
+            'braitenberg/values',
+            Point,
+            queue_size=1
+        )
+
         self.bridge = CvBridge()
         self.corners = getCorners(240, 320)
-        self.lane_processing = pipeline.LaneDetection(self.corners)
+
+        corners_region_l, corners_region_r = getLeftRightCorners(240, 320)
+        self.navigation = navigation.Braitenberg(corners_region_l, corners_region_r, 80)
+        self.braitenbergPoint = Point()
+        
+        # self.lane_processing = pipeline.LaneDetection(self.corners)
 
         # input image
         self.BGR = None
@@ -69,12 +94,17 @@ class CameraProcessing(object):
         # BGR = cv2.resize(BGR, (320, 240))
 
         # process images
-        result = self.lane_processing.process_image(image)
+        # result = self.lane_processing.process_image(image)
+        activation_l, activation_r = self.navigation.process_image(image)
+        self.braitenbergPoint.x = activation_l
+        self.braitenbergPoint.y = activation_r
 
         # HSV = cv2.cvtColor(BGR, cv2.COLOR_BGR2HSV)
 
+        self.navPublisher.publish(self.braitenbergPoint)
+
         self.imgBinaryPublisher.publish(
-            self.bridge.cv2_to_imgmsg(result, 'bgr8'))
+            self.bridge.cv2_to_imgmsg(image, 'bgr8'))
 
         # mono8
         # bgr8
