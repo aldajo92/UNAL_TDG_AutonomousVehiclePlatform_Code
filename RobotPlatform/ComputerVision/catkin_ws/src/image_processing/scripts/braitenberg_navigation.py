@@ -54,4 +54,3 @@ class Braitenberg:
         img_l_gray, img_r_gray = self._get_left_right_regions_gray(selected_channel)
         activation_l, activation_r = self._check_both_activation(img_l_gray, img_r_gray, self.activation_value)
         return activation_l, activation_r
-    
