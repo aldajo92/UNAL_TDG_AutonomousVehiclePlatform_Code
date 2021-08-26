@@ -1,3 +1,4 @@
 <launch>
     <node pkg="image_processing" type="cv_pipeline.py" name="cv_pipeline_1" />
+    <node pkg="image_processing" type="pid_controller.py" name="pid_controller_1" />
 </launch>

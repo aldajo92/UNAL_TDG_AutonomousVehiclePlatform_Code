@@ -52,5 +52,6 @@ class Braitenberg:
     def process_image(self, image):
         selected_channel = self._select_channel(image)
         img_l_gray, img_r_gray = self._get_left_right_regions_gray(selected_channel)
-        activation_l, activation_r = self._check_both_activation(img_l_gray, img_r_gray, self.activation_value)
-        return activation_l, activation_r
+        value_l, value_r = self._sense_both_pixels(img_l_gray, img_r_gray)
+        return value_l, value_r
+    

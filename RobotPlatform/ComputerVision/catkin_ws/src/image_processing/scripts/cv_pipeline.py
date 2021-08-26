@@ -8,7 +8,7 @@ from cv_bridge import CvBridge
 import cv2
 
 import lane_detection_pipeline as pipeline
-import braitenberg_navigation as navigation
+import braitenberg_sensor as br
 
 
 def getCorners(height, width):
@@ -61,13 +61,13 @@ class CameraProcessing(object):
         )
 
         self.imgBinaryPublisher = rospy.Publisher(
-            'computer_vision/line_processing',
+            'computer_vision/braitenberg',
             Image,
             queue_size=1
         )
 
         self.navPublisher = rospy.Publisher(
-            'braitenberg/values',
+            'navigation/reference_values',
             Point,
             queue_size=1
         )
@@ -76,8 +76,8 @@ class CameraProcessing(object):
         self.corners = getCorners(240, 320)
 
         corners_region_l, corners_region_r = getLeftRightCorners(240, 320)
-        self.navigation = navigation.Braitenberg(corners_region_l, corners_region_r, 80)
-        self.braitenbergPoint = Point()
+        self.braitenberg = br.Braitenberg(corners_region_l, corners_region_r, 80)
+        self.braitenbergValues = Point()
         
         # self.lane_processing = pipeline.LaneDetection(self.corners)
 
@@ -95,13 +95,13 @@ class CameraProcessing(object):
 
         # process images
         # result = self.lane_processing.process_image(image)
-        activation_l, activation_r = self.navigation.process_image(image)
-        self.braitenbergPoint.x = activation_l
-        self.braitenbergPoint.y = activation_r
+        activation_l, activation_r = self.braitenberg.process_image(image)
+        self.braitenbergValues.x = activation_l
+        self.braitenbergValues.y = activation_r
 
         # HSV = cv2.cvtColor(BGR, cv2.COLOR_BGR2HSV)
 
-        self.navPublisher.publish(self.braitenbergPoint)
+        self.navPublisher.publish(self.braitenbergValues)
 
         self.imgBinaryPublisher.publish(
             self.bridge.cv2_to_imgmsg(image, 'bgr8'))
