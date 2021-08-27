@@ -160,8 +160,9 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
-  scripts/cv_pipeline.py
-  scripts/pid_controller.py
+  scripts/node_cv_pipeline.py
+  scripts/node_pid_controller.py
+  scripts/node_navigation.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
