@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="ros_hello_world" type="cv_pipeline.py" name="cv_pipeline_1" />
+</launch>
