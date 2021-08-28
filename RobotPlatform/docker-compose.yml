@@ -47,20 +47,20 @@ services:
   #     - ros
   #   restart: always
 
-  # motor_driver_container:
-  #   build:
-  #     context: ./MotorDriver
-  #   devices:
-  #     - /dev/i2c-1
-  #   volumes:
-  #     - ./MotorDriver/catkin_ws:/catkin_ws
-  #   depends_on:
-  #     - ros-master
-  #   environment:
-  #     - "ROS_MASTER_URI=http://ros-master:11311"
-  #   networks:
-  #     - ros
-  #   restart: always
+  motor_driver_container:
+    build:
+      context: ./MotorDriver
+    devices:
+      - /dev/i2c-1
+    volumes:
+      - ./MotorDriver/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
 
   # robot_application_container:
   #   build:
@@ -75,20 +75,20 @@ services:
   #     - ros
   #   restart: always
 
-  sensor_manager_container:
-    build:
-      context: ./SensorManager
-    devices:
-      - /dev/i2c-1
-    volumes:
-      - ./SensorManager/catkin_ws:/catkin_ws
-    depends_on:
-      - ros-master
-    environment:
-      - "ROS_MASTER_URI=http://ros-master:11311"
-    networks:
-      - ros
-    restart: always
+  # sensor_manager_container:
+  #   build:
+  #     context: ./SensorManager
+  #   devices:
+  #     - /dev/i2c-1
+  #   volumes:
+  #     - ./SensorManager/catkin_ws:/catkin_ws
+  #   depends_on:
+  #     - ros-master
+  #   environment:
+  #     - "ROS_MASTER_URI=http://ros-master:11311"
+  #   networks:
+  #     - ros
+  #   restart: always
 
   # server_container:
   #   ports:

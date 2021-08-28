@@ -6,6 +6,7 @@ from sensor_msgs.msg import Image
 from geometry_msgs.msg import Point
 from cv_bridge import CvBridge
 import cv2
+import numpy as np
 
 import library_lane_detection as pipeline
 import library_braitenberg as br
@@ -50,7 +51,7 @@ def getLeftRightCorners(height, width):
     ]
     return corners_region_l, corners_region_r
 
-class CameraProcessing(object):
+class CVProcessingNode(object):
 
     def __init__(self):
         self.imgSubscriber = rospy.Subscriber(
@@ -67,7 +68,7 @@ class CameraProcessing(object):
         )
 
         self.navPublisher = rospy.Publisher(
-            'navigation/braitenberg_values',
+            'braitenberg/values',
             Point,
             queue_size=1
         )
@@ -82,39 +83,40 @@ class CameraProcessing(object):
         # self.lane_processing = pipeline.LaneDetection(self.corners)
 
         # input image
-        self.BGR = None
+        self.BGR = np.zeros(shape=(0,0))
     
     def onImageReceived(self, msg):
         self.BGR = self.bridge.imgmsg_to_cv2(msg)
-        self.processImage(self.BGR)
     
     def processImage(self, image):
-        # reduce the resolution of the image to half to allow for
-        # faster processing
         # BGR = cv2.resize(BGR, (320, 240))
 
-        # process images
         # result = self.lane_processing.process_image(image)
         activation_l, activation_r = self.braitenberg.process_image(image)
         self.braitenbergValues.x = activation_l
         self.braitenbergValues.y = activation_r
         self.braitenbergValues.z = 0
 
-        # HSV = cv2.cvtColor(BGR, cv2.COLOR_BGR2HSV)
-
-        self.navPublisher.publish(self.braitenbergValues)
-
         self.imgBinaryPublisher.publish(
             self.bridge.cv2_to_imgmsg(image, 'bgr8'))
 
         # mono8
-        # bgr8
+        # mono8, bgr8
         # self.imgBinaryPublisher.publish(
         #     self.bridge.cv2_to_imgmsg(result, 'bgr8'))
+    
+    def cv_loop(self):
+        rate = rospy.Rate(2)
+        while not rospy.is_shutdown():
+            if self.BGR.shape != (0,0):
+                self.processImage(self.BGR)
+                self.navPublisher.publish(self.braitenbergValues)
+            rate.sleep()
 
 if __name__ == '__main__':
     rospy.init_node('camera_processing_python3')
 
-    processor = CameraProcessing()
+    cv_node = CVProcessingNode()
+    cv_node.cv_loop()
 
     rospy.spin()
