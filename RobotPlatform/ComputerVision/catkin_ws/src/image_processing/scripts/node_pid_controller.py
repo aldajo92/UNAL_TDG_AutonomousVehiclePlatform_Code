@@ -82,14 +82,6 @@ class PIDNode:
             pid.apply_pid_control_signal()
             rate.sleep()
 
-# def pid_loop():
-#     pid = PIDNode()
-#     rate = rospy.Rate(10) # 10hz
-#     while not rospy.is_shutdown():
-#         hello_str = "hello world %s" % rospy.get_time()
-#         rospy.loginfo(hello_str)
-#         rate.sleep()
-
 if __name__ == '__main__':
     rospy.init_node('pid_controller') # No finished yet
     pid = PIDNode()

@@ -32,9 +32,6 @@ class MotorController:
         z_val = int(self.dir_zero + (twist.angular.z * self.dir_max))
         self.msg.data = [x_val, z_val, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
-        # print(twist.linear.x)
-        # print(twist.angular.z)
-        # print(self.msg.data)
         self.pub.publish(self.msg)
 
 
