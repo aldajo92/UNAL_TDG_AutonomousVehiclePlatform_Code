@@ -1,6 +1,24 @@
 import numpy as np
 import cv2
 
+def getCorners(height, width):
+    mid_offset = 20
+    bottom_offset = 0
+    x_offset = 0
+    y_bottom_offset = 130
+    y_top_offset = 65
+
+    mid_y = height // 2
+    mid_width = width // 2
+
+    left_bottom = (0 + bottom_offset + x_offset, height - y_bottom_offset)
+    right_bottom = (width - bottom_offset + x_offset, height - y_bottom_offset)
+    apex1 = ( mid_width - mid_offset + x_offset, mid_y - y_top_offset)
+    apex2 = ( mid_width + mid_offset + x_offset, mid_y - y_top_offset)
+    corners = [left_bottom, right_bottom, apex2, apex1]
+
+    return corners
+
 class Line:
     def __init__(self):
         # polynomial coefficients averaged over the last n iterations

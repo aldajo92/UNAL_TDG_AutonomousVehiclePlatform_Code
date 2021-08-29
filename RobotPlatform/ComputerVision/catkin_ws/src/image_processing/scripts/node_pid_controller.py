@@ -66,9 +66,9 @@ class PIDNode:
         self.twist = Twist()
         self.twist.linear.x = 0
     
-    def references_values_received(self, twist):
-        # TODO: add implementation for reference values received
-        pass
+    def references_values_received(self, twist_ref):
+        # TODO: apply PID here
+        self.motor_publishser.publish(twist_ref)
     
     def encoder_value_received(self, float32):
         # TODO: add implementation for encoder values received
@@ -84,11 +84,12 @@ class PIDNode:
             self.twist.angular.z = 0.5
         else:
             self.twist.angular.z = -0.5
+        rospy.loginfo("steering = {}".format(self.twist.angular.z))
         self.change = not self.change
         self.motor_publishser.publish(self.twist)
     
     def run_pid_loop(self):
-        rate = rospy.Rate(0.5) # 10hz
+        rate = rospy.Rate(0.5)
         while not rospy.is_shutdown():
             # hello_str = "hello world %s" % rospy.get_time()
             # rospy.loginfo(rospy.get_time())
@@ -100,5 +101,5 @@ class PIDNode:
 if __name__ == '__main__':
     rospy.init_node('pid_controller') # No finished yet
     pidNode = PIDNode()
-    pidNode.run_pid_loop()
+    # pidNode.run_pid_loop()
     rospy.spin()
