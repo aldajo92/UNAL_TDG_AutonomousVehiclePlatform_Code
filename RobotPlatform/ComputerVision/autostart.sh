@@ -7,7 +7,6 @@ VISION_OPENCV=/python3_ws/src/vision_opencv
 if !([ -d "$VISION_OPENCV" ]); then
     git clone https://github.com/ros-perception/vision_opencv.git $VISION_OPENCV
     cd /python3_ws/src/vision_opencv && git checkout 1.13.0
-    # chmod 777 /python3_ws/src/vision_opencv/cv_bridge/CMakeLists.txt
 fi
 
 INSTALL_FOLDER=/python3_ws/install
@@ -27,7 +26,4 @@ source /catkin_ws/devel/setup.bash
 source /python3_ws/install/setup.bash --extend
 
 cd /catkin_ws/ && catkin_make
-
-# source /catkin_ws/devel/setup.bash
-# source /python3_ws/devel/setup.bash
-roslaunch ros_hello_world launcher.launch
+roslaunch cv_navigation launcher.launch

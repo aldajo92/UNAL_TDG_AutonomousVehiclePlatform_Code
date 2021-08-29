@@ -7,7 +7,7 @@ from geometry_msgs.msg import Twist
 
 class MotorController:
     def __init__(self):
-        self.pub = rospy.Publisher('pca9685/motor_command', Int32MultiArray, queue_size=1000)
+        self.pub = rospy.Publisher("pca9685/motor_command", Int32MultiArray, queue_size=1000)
         self.sub = rospy.Subscriber("motors/motor_twist", Twist, self.callback)
         self.msg = Int32MultiArray()
         self.msg.layout.dim.append(MultiArrayDimension())
@@ -32,9 +32,6 @@ class MotorController:
         z_val = int(self.dir_zero + (twist.angular.z * self.dir_max))
         self.msg.data = [x_val, z_val, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
-        # print(twist.linear.x)
-        print(twist.angular.z)
-        print(self.msg.data)
         self.pub.publish(self.msg)
 
 

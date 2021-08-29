@@ -24,7 +24,7 @@ def main():
     rospy.init_node('camera_viewer')
 
     subscriber = rospy.Subscriber(
-        'camera_processing/camera/image_color/BGR/raw',
+        'camera/BGR/raw',
         Image,
         queue_size=1,
         callback=messageCallback)
