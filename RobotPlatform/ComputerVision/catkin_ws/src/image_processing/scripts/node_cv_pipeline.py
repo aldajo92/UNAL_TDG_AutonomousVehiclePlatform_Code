@@ -9,7 +9,6 @@ import cv2
 import numpy as np
 
 import library_braitenberg as br
-# import library_lane_detection as ld
 
 class CVProcessingNode(object):
 
@@ -39,20 +38,13 @@ class CVProcessingNode(object):
         self.braitenberg = br.Braitenberg(corners_region_l, corners_region_r, 80)
         self.braitenbergValues = Point()
         self.braitenbergValues.z = 0
-        
-        # self.corners = ld.getCorners(240, 320)
-        # self.lane_processing = ld.LaneDetection(self.corners)
 
-        # input image
         self.BGR = np.zeros(shape=(0,0))
     
     def onImageReceived(self, msg):
         self.BGR = self.bridge.imgmsg_to_cv2(msg)
     
     def processImage(self, image):
-        # BGR = cv2.resize(BGR, (320, 240))
-
-        # result = self.lane_processing.process_image(image)
         img_regions, activation_l, activation_r = self.braitenberg.process_image(image)
         self.braitenbergValues.x = activation_l
         self.braitenbergValues.y = activation_r

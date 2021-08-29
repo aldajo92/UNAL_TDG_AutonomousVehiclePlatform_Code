@@ -84,7 +84,6 @@ class Braitenberg:
         line_color_r = (255, 0, 0)
         thickness = 2
 
-        # image = np.copy(img)
         image = cv2.cvtColor(self.s_channel, cv2.COLOR_GRAY2RGB)
 
         image = cv2.line(image, vertices_l[0], vertices_l[1], line_color_l, thickness)
