@@ -26,4 +26,4 @@ source /catkin_ws/devel/setup.bash
 source /python3_ws/install/setup.bash --extend
 
 cd /catkin_ws/ && catkin_make
-roslaunch image_processing launcher.launch
+roslaunch cv_navigation launcher.launch

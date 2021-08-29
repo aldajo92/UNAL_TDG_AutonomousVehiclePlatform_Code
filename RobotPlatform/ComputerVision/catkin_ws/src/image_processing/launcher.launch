@@ -1,5 +1,0 @@
-<launch>
-    <node pkg="image_processing" type="node_cv_pipeline.py" name="cv_pipeline_1" />
-    <node pkg="image_processing" type="node_pid_controller.py" name="pid_controller_1" />
-    <node pkg="image_processing" type="node_navigation.py" name="navigation_1"/>
-</launch>
