@@ -72,9 +72,9 @@ class Braitenberg:
     
     def process_image(self, image):
         self.s_channel = self._select_channel(image)
-        img_regions = self._draw_regions()
         img_l_gray, img_r_gray = self._get_left_right_regions_gray(self.s_channel)
         value_l, value_r = self._sense_both_pixels(img_l_gray, img_r_gray)
+        img_regions = self._draw_regions()
         return img_regions, value_l, value_r
     
     def _draw_regions(self):
