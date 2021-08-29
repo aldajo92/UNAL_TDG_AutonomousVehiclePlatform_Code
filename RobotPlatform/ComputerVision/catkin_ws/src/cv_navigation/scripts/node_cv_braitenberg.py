@@ -51,11 +51,6 @@ class CVProcessingNode(object):
 
         self.imgBinaryPublisher.publish(
             self.bridge.cv2_to_imgmsg(img_regions, 'bgr8'))
-
-        # mono8
-        # mono8, bgr8
-        # self.imgBinaryPublisher.publish(
-        #     self.bridge.cv2_to_imgmsg(result, 'bgr8'))
     
     def cv_loop(self):
         rate = rospy.Rate(5)

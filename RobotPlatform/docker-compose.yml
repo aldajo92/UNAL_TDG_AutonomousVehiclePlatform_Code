@@ -75,35 +75,35 @@ services:
       - ros
     restart: always
 
-  # sensor_manager_container:
-  #   build:
-  #     context: ./SensorManager
-  #   devices:
-  #     - /dev/i2c-1
-  #   volumes:
-  #     - ./SensorManager/catkin_ws:/catkin_ws
-  #   depends_on:
-  #     - ros-master
-  #   environment:
-  #     - "ROS_MASTER_URI=http://ros-master:11311"
-  #   networks:
-  #     - ros
-  #   restart: always
+  sensor_manager_container:
+    build:
+      context: ./SensorManager
+    devices:
+      - /dev/i2c-1
+    volumes:
+      - ./SensorManager/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
 
-  # server_container:
-  #   ports:
-  #     - "5170:5170"
-  #   build:
-  #     context: ./Server
-  #   volumes:
-  #     - ./Server/nodejs_ros_server:/nodejs_ros_server
-  #   depends_on:
-  #     - ros-master
-  #   environment:
-  #     - "ROS_MASTER_URI=http://ros-master:11311"
-  #   networks:
-  #     - ros
-  #   restart: always
+  server_container:
+    ports:
+      - "5170:5170"
+    build:
+      context: ./Server
+    volumes:
+      - ./Server/nodejs_ros_server:/nodejs_ros_server
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
 
   video_streaming_container:
     ports:
