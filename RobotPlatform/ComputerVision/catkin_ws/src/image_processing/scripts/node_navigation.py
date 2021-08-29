@@ -33,18 +33,25 @@ class Navigation:
             queue_size=1
         )
 
-        self.throttle_ref = 0.55
+        self.steering_ref = 0.4
+        self.throttle_ref = 0.6
         self.twist = Twist()
         self._stop_point = Point(100,100,0)
         self.activate_navigation = False
     
     def joy_received(self, joy_data):
         button_x = joy_data.buttons[7]
+        button_y = joy_data.buttons[6]
+        
         if button_x == 1:
             self.activate_navigation = True
         else:
             self.activate_navigation = False
+
+        if button_y == 1:
+            self.activate_navigation = False
             self._stop_reference()
+        
         rospy.loginfo("x = {}".format(button_x))
 
     def values_received(self, b_point):
@@ -59,10 +66,10 @@ class Navigation:
             self.twist.angular.z = 0
         elif value_l > self.threshold and value_r <= self.threshold:
             self.twist.linear.x = self.throttle_ref
-            self.twist.angular.z = -0.5
+            self.twist.angular.z = -self.steering_ref
         elif value_l <= self.threshold and value_r > self.threshold:
             self.twist.linear.x = self.throttle_ref
-            self.twist.angular.z = 0.5
+            self.twist.angular.z = self.steering_ref
         else:
             self.twist.linear.x = self.throttle_ref
             self.twist.angular.z = 0

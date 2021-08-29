@@ -62,18 +62,18 @@ services:
       - ros
     restart: always
 
-  # robot_application_container:
-  #   build:
-  #     context: ./RobotApplication
-  #   volumes:
-  #     - ./RobotApplication/catkin_ws:/catkin_ws
-  #   depends_on:
-  #     - ros-master
-  #   environment:
-  #     - "ROS_MASTER_URI=http://ros-master:11311"
-  #   networks:
-  #     - ros
-  #   restart: always
+  robot_application_container:
+    build:
+      context: ./RobotApplication
+    volumes:
+      - ./RobotApplication/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
 
   # sensor_manager_container:
   #   build:

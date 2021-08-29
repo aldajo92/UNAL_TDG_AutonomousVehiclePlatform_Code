@@ -66,7 +66,7 @@ class CVProcessingNode(object):
         #     self.bridge.cv2_to_imgmsg(result, 'bgr8'))
     
     def cv_loop(self):
-        rate = rospy.Rate(2)
+        rate = rospy.Rate(5)
         while not rospy.is_shutdown():
             if self.BGR.shape != (0,0):
                 self.processImage(self.BGR)

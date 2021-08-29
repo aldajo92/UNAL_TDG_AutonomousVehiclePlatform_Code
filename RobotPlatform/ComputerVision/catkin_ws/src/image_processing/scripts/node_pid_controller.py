@@ -89,7 +89,7 @@ class PIDNode:
         self.motor_publishser.publish(self.twist)
     
     def run_pid_loop(self):
-        rate = rospy.Rate(0.5)
+        rate = rospy.Rate(2)
         while not rospy.is_shutdown():
             # hello_str = "hello world %s" % rospy.get_time()
             # rospy.loginfo(rospy.get_time())
