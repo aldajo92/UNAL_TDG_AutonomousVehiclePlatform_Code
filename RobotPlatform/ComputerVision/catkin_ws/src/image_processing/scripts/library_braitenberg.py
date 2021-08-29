@@ -1,6 +1,27 @@
 import numpy as np
 import cv2
 
+def getLeftRightCorners(height, width):
+    rectange_w = 10
+    rectange_h = 40
+
+    margin_horizontal = 100
+    margin_top = 70
+
+    corners_region_l = [
+        (margin_horizontal, margin_top),
+        (margin_horizontal, rectange_h+margin_top),
+        (margin_horizontal+rectange_w, rectange_h+margin_top),
+        (margin_horizontal+rectange_w, margin_top)
+    ]
+    corners_region_r = [
+        (width-margin_horizontal-rectange_w, margin_top), 
+        (width-margin_horizontal-rectange_w, rectange_h+margin_top),
+        (width-margin_horizontal, rectange_h+margin_top),
+        (width-margin_horizontal, margin_top)
+    ]
+    return corners_region_l, corners_region_r
+
 class Braitenberg:
     def __init__(self, corners_l, corners_r, activation_value):
         self.l_corners = corners_l
@@ -50,8 +71,28 @@ class Braitenberg:
         return img_l_gray, img_r_gray
     
     def process_image(self, image):
-        selected_channel = self._select_channel(image)
-        img_l_gray, img_r_gray = self._get_left_right_regions_gray(selected_channel)
+        self.s_channel = self._select_channel(image)
+        img_l_gray, img_r_gray = self._get_left_right_regions_gray(self.s_channel)
         value_l, value_r = self._sense_both_pixels(img_l_gray, img_r_gray)
-        return value_l, value_r
+        img_regions = self._draw_regions()
+        return img_regions, value_l, value_r
     
+    def _draw_regions(self):
+        vertices_l = self.l_corners
+        vertices_r = self.r_corners
+        line_color_l = (0, 0, 255)
+        line_color_r = (255, 0, 0)
+        thickness = 2
+
+        image = cv2.cvtColor(self.s_channel, cv2.COLOR_GRAY2RGB)
+
+        image = cv2.line(image, vertices_l[0], vertices_l[1], line_color_l, thickness)
+        image = cv2.line(image, vertices_l[1], vertices_l[2], line_color_l, thickness)
+        image = cv2.line(image, vertices_l[2], vertices_l[3], line_color_l, thickness)
+        image = cv2.line(image, vertices_l[3], vertices_l[0], line_color_l, thickness)
+
+        image = cv2.line(image, vertices_r[0], vertices_r[1], line_color_r, thickness)
+        image = cv2.line(image, vertices_r[1], vertices_r[2], line_color_r, thickness)
+        image = cv2.line(image, vertices_r[2], vertices_r[3], line_color_r, thickness)
+        image = cv2.line(image, vertices_r[3], vertices_r[0], line_color_r, thickness)
+        return image

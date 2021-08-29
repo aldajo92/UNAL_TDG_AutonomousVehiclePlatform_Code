@@ -82,10 +82,4 @@ if (process.env.ROS_DISTRO == "melodic") {
     // console.log(twistMessage)
     pub.publish(twistMessage)
   })
-
-  // setInterval(() => {
-  //   console.log("publishing")
-  //   twistMessage.linear.x = steering
-  //   pub.publish({ linear: { x = } })
-  // }, 1000)
 }
