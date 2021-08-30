@@ -34,7 +34,7 @@ class Navigation:
         )
 
         self.steering_ref = 0.4
-        self.throttle_ref = 0.6
+        self.throttle_ref = 0.8
         self.twist = Twist()
         self._stop_point = Point(100,100,0)
         self.activate_navigation = False
