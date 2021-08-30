@@ -33,8 +33,8 @@ class Navigation:
             queue_size=1
         )
 
-        self.steering_ref = 0.4
-        self.throttle_ref = 0.8
+        self.steering_ref = 0.5
+        self.throttle_ref = 0.3
         self.twist = Twist()
         self._stop_point = Point(100,100,0)
         self.activate_navigation = False

@@ -73,7 +73,7 @@ class PIDController:
 class PIDNode:
 
     def __init__(self):
-        self._rate = rospy.Rate(4)
+        self._rate = rospy.Rate(2)
         self.pid_throttle = PIDController(0.1, 0.05, 0.001, 1)
 
         self.motor_publishser = rospy.Publisher(
