@@ -42,7 +42,7 @@ class PIDController:
         self.prev_error = self.error
 
         self.error = self.reference - self.measure
-        if abs(self.error) < (self.reference*0.1):
+        if abs(self.error) < (self.reference*0.05):
             self.error = 0
 
         self.int_error += self.error
@@ -52,7 +52,7 @@ class PIDController:
         u_i = self.ki * self.int_error
         u_d = self.kd * self.diff_error
 
-        u_signal = 0.3 + u_p + u_i + u_d
+        u_signal = 0.5 + u_p + u_i + u_d
 
         # rospy.loginfo("reference: {}".format(self.reference))
         rospy.loginfo("error: {}".format(self.error))
@@ -74,7 +74,8 @@ class PIDNode:
 
     def __init__(self):
         self._rate = rospy.Rate(2)
-        self.pid_throttle = PIDController(0.1, 0.05, 0.001, 1)
+        # self.pid_throttle = PIDController(0.5, 0.05, 0.001, 1)
+        self.pid_throttle = PIDController(0.5, 0.1, 0, 0.8)
 
         self.motor_publishser = rospy.Publisher(
             "motors/motor_twist",
@@ -129,7 +130,8 @@ class PIDNode:
 
             # rospy.loginfo("twist_motor: {}".format(u_throttle))
 
-            self.motor_publishser.publish(self.twist_motor)
+            if self.pid_throttle.reference != 0:
+                self.motor_publishser.publish(self.twist_motor)
             self._rate.sleep()
 
 if __name__ == '__main__':
