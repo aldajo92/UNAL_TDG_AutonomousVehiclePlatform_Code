@@ -3,10 +3,10 @@ import cv2
 
 def getLeftRightCorners(height, width):
     rectange_w = 10
-    rectange_h = 120
+    rectange_h = 100
 
     margin_horizontal = 100
-    margin_top = 70
+    margin_top = 80
 
     corners_region_l = [
         (margin_horizontal, margin_top),
