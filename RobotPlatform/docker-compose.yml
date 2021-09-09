@@ -79,7 +79,7 @@ services:
     build:
       context: ./SensorManager
     devices:
-      - /dev/i2c-1
+      - /dev/i2c-1  
     volumes:
       - ./SensorManager/catkin_ws:/catkin_ws
     depends_on:

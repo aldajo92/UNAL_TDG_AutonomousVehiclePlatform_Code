@@ -28,12 +28,6 @@ class PIDController:
         self.prev_error = 0     # Derivative
         self.diff_error = 0      # Derivative
 
-        # self.current_value = 0
-        # self.error = 0
-        # self.prev_error = 0
-        # self.int_error = 0
-        # self.der_error = 0
-
         self.max_control_action = max_u
         self.min_control_action = 0
 
@@ -54,9 +48,7 @@ class PIDController:
 
         u_signal = 0.5 + u_p + u_i + u_d
 
-        # rospy.loginfo("reference: {}".format(self.reference))
         rospy.loginfo("error: {}".format(self.error))
-        # rospy.loginfo("u_signal: {}".format(u_signal))
 
         # apply boundaries
         if u_signal > self.max_control_action:
@@ -74,8 +66,7 @@ class PIDNode:
 
     def __init__(self):
         self._rate = rospy.Rate(2)
-        # self.pid_throttle = PIDController(0.5, 0.05, 0.001, 1)
-        self.pid_throttle = PIDController(0.5, 0.1, 0, 0.8)
+        self.pid_throttle = PIDController(0.5, 0.1, 0.001, 0.8)
 
         self.motor_publishser = rospy.Publisher(
             "motors/motor_twist",
@@ -121,14 +112,11 @@ class PIDNode:
             self.pid_throttle.measure = current_measure
             self.start_filter = True
         self.last_measure = current_measure
-        # rospy.loginfo("measure: {}".format(self.pid.measure))
     
     def run_pid_loop(self):
         while not rospy.is_shutdown():
             u_throttle = self.pid_throttle.calculate_pid_control_signal()
             self.twist_motor.linear.x = u_throttle
-
-            # rospy.loginfo("twist_motor: {}".format(u_throttle))
 
             if self.pid_throttle.reference != 0:
                 self.motor_publishser.publish(self.twist_motor)
