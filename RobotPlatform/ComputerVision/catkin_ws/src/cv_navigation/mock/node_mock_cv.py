@@ -17,7 +17,8 @@ class CVProcessingNode:
             queue_size=1
         )
 
-        self._mock_data = [(100,100), (100,0), (0,100), (0,0)]
+        # self._mock_data = [(100,100), (100,0), (0,100), (0,0)]
+        self._mock_data = [(0,0), (0,0)]
         self._mock_index = 0
         self.b_point = Point()
     
@@ -29,7 +30,7 @@ class CVProcessingNode:
             self.b_point.z = 0
 
             self._navPublisher.publish(self.b_point)
-            self._mock_index = (self._mock_index + 1) % 4
+            self._mock_index = (self._mock_index + 1) % len(self._mock_data)
             self._rate.sleep()
 
 if __name__ == '__main__':
