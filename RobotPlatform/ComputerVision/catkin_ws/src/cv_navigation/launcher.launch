@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="cv_navigation" type="node_cv_braitenberg.py" name="cv_pipeline_1" />
+    <!-- <node pkg="cv_navigation" type="node_mock_cv.py" name="cv_pipeline_1" /> -->
+    <node pkg="cv_navigation" type="node_navigation.py" name="navigation_1"/>
+    <node pkg="cv_navigation" type="node_pid_controller.py" name="pid_controller_1" />
+</launch>

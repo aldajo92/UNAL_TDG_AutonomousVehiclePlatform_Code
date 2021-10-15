@@ -163,7 +163,6 @@ include_directories(
 install(PROGRAMS
   scripts/camera
   scripts/camera_viewer
-  scripts/camera_processing
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

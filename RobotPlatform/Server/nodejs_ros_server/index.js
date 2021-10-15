@@ -39,6 +39,11 @@ const message = {
   input: 0.0
 }
 
+const imput_motor = {
+  steering: 0.0,
+  throttle: 0.0
+}
+
 // ROS-NODEJS
 if (process.env.ROS_DISTRO == "melodic") {
   const rosnodejs = require('rosnodejs')
@@ -49,17 +54,25 @@ if (process.env.ROS_DISTRO == "melodic") {
     })
 
   const nh = rosnodejs.nh
-  const sub1 = nh.subscribe('/magnet_encoder/value', 'std_msgs/Float32', (msg) => {
+
+  nh.subscribe('/magnet_encoder/value', 'std_msgs/Float32', (msg) => {
     message.velocityEncoder = msg.data
-    message.direction = twistMessage.angular.z
-    message.input = twistMessage.linear.x
+    // message.direction = twistMessage.angular.z
+    // message.input = twistMessage.linear.x
+    message.direction = imput_motor.steering
+    message.input = imput_motor.throttle
     io.sockets.emit('robot-message', message)
   })
 
-  const sub2 = nh.subscribe('/imu/mag', 'sensor_msgs/MagneticField', (msg) => {
+  nh.subscribe('/imu/mag', 'sensor_msgs/MagneticField', (msg) => {
     // message.velocityEncoder = msg.data
     // io.sockets.emit('robot-message', message)
     // console.log(msg)
+  })
+
+  nh.subscribe('/motors/motor_twist', 'geometry_msgs/Twist', (twist) => {
+    imput_motor.steering = twist.angular.z
+    imput_motor.throttle = twist.linear.x
   })
 
   const twistMessage = {
@@ -82,10 +95,4 @@ if (process.env.ROS_DISTRO == "melodic") {
     // console.log(twistMessage)
     pub.publish(twistMessage)
   })
-
-  // setInterval(() => {
-  //   console.log("publishing")
-  //   twistMessage.linear.x = steering
-  //   pub.publish({ linear: { x = } })
-  // }, 1000)
 }

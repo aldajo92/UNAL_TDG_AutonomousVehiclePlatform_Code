@@ -25,7 +25,7 @@ from cv_bridge import CvBridge
 class CameraPublisher(object):
 
     def __init__(self,
-                 topic='camera_processing/camera/image_color/BGR/raw',
+                 topic='camera/BGR/raw',
                  camindex=0,
                  resolution=(480, 640)):
 
@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
     # read node parameters
     topic = rospy.get_param('camera_processing/topic',
-                            'camera_processing/camera/image_color/BGR/raw')
+                            'camera/BGR/raw')
     camindex = rospy.get_param('camera_processing/camera', 0)
     resolution = rospy.get_param('camera_processing/resolution', [240, 320])
 

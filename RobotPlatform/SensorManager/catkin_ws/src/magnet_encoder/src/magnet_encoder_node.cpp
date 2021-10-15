@@ -137,7 +137,6 @@ int main(int argc, char **argv)
 
     // activity->stop();
 
-    // delete watchdog;
     delete i2c;
     delete nh_priv;
     delete nh;

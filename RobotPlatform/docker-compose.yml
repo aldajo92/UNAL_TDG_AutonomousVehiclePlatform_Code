@@ -32,20 +32,20 @@ services:
     restart: always
   
   ## Just use it to manage car with joystick connected via USB
-  # joy_driver_container:
-  #   build:
-  #     context: ./JoyDriver
-  #   devices:
-  #     - /dev/input/js0
-  #   volumes:
-  #     - ./JoyDriver/catkin_ws:/catkin_ws
-  #   depends_on:
-  #     - ros-master
-  #   environment:
-  #     - "ROS_MASTER_URI=http://ros-master:11311"
-  #   networks:
-  #     - ros
-  #   restart: always
+  joy_driver_container:
+    build:
+      context: ./JoyDriver
+    devices:
+      - /dev/input/js0
+    volumes:
+      - ./JoyDriver/catkin_ws:/catkin_ws
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    networks:
+      - ros
+    restart: always
 
   motor_driver_container:
     build:
@@ -79,7 +79,7 @@ services:
     build:
       context: ./SensorManager
     devices:
-      - /dev/i2c-1
+      - /dev/i2c-1  
     volumes:
       - ./SensorManager/catkin_ws:/catkin_ws
     depends_on:
@@ -122,12 +122,14 @@ services:
       - ros
     restart: always
 
-  ngrok_container:
-    build:
-      context: ./_ngrok
-    env_file: ~/variables.env
-    networks:
-      - ros
-    restart: always
+  # ngrok_container:
+  #   build:
+  #     context: ./_ngrok
+  #   env_file: ~/variables.env
+  #   networks:
+  #     - ros
+  #   restart: always
 
     # docker run --rm -p 4040:4040 -p 5000:5000 -e NGROK_PORT="host.docker.internal:5000" -e NGROK_SUBDOMAIN=aldajo92 wernight/ngrok
+
+    # rosrun cv_navigation node_pid_controller.py
